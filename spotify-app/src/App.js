@@ -1,11 +1,12 @@
 import './App.css';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 function App() {
 
   const clientId = "621b007cf0b14214b779c6c6bee28393";
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
+  const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
     async function startup() {
@@ -15,8 +16,8 @@ function App() {
       } else {
         alert(code)
         const accessToken = await getAccessToken(clientId, code);
-        const profile = await fetchProfile(accessToken);
-        console.log(profile);
+        const fetchedTracks = await fetchTracks(accessToken);
+        setTracks(fetchedTracks);
         // populateUI(profile);
       }
     }
@@ -41,34 +42,48 @@ function App() {
       return access_token;
     }
 
-    async function fetchProfile(token) {
-      const result = await fetch("https://api.spotify.com/v1/me", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
-      });
+    async function fetchTracks(token) {
+      let items = [];
+      let numResults = 0;
+      let offset = 0;
 
-      return await result.json();
-    }
+      do {
+        const result = await fetch(`https://api.spotify.com/v1/playlists/0Et0jQNVIQlCakh2jO5t1p/tracks?offset=${offset}&limit=50`, {
+          method: "GET", headers: { Authorization: `Bearer ${token}` }
+        });
+        const json = await result.json();
+        numResults = json.items.length;
+        offset += 50;
+        items = items.concat(json.items.map(item => item.track))
+      } while (numResults === 50)
+      
 
-    function populateUI(profile) {
-      // TODO: Update UI with profile data
+      return items;
     }
 
     startup();
   }, [code])
 
   return (<>
-    <h1>Display your Spotify profile data</h1>
-    <section id="profile">
-      <h2>Logged in as <span id="displayName"></span></h2>
-      <span id="avatar"></span>
-      <ul>
-        <li>User ID: <span id="id"></span></li>
-        <li>Email: <span id="email"></span></li>
-        <li>Spotify URI: <a id="uri" href="#"></a></li>
-        <li>Link: <a id="url" href="#"></a></li>
-        <li>Profile Image: <span id="imgUrl"></span></li>
-      </ul>
-    </section>
+    <h1>Liked Songs</h1>
+    <table>
+      <tbody>
+        <tr>
+          <td>Album</td>
+          <td>Song</td>
+          <td>Artists</td>
+          <td>Released</td>
+        </tr>
+        {tracks && tracks.map((track) => 
+          <tr>
+            <td>{track.album.images.length > 0 && <img src={track.album.images[2].url}/>}</td>
+            <td>{track.name}</td>
+            <td>{track.artists.map((artist) => artist.name).join(", ")}</td>
+            <td>{track.album.release_date.substring(0, 4)}</td>
+          </tr>
+        )}
+        </tbody>
+    </table>
 </>);
 }
 
