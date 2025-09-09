@@ -1,6 +1,7 @@
 #root {
     display: grid;
     grid-template-rows: 75px calc(100vh - 75px);
+    grid-template-rows: 75px calc(100svh - 75px);
 }
 
 header {
@@ -30,6 +31,7 @@ img {
 @media (max-width: 550px) {
     #root {
         grid-template-rows: 50px calc(100vh - 50px);
+        grid-template-rows: 50px calc(100svh - 50px);
     }
     
     header {
