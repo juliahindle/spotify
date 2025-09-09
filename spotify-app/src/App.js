@@ -33,14 +33,16 @@ function App() {
       let offset = 0;
 
       do {
-        const result = await fetch(`https://api.spotify.com/v1/playlists/0Et0jQNVIQlCakh2jO5t1p/tracks?offset=${offset}&limit=50`, {
+        // const result = await fetch(`https://api.spotify.com/v1/playlists/0Et0jQNVIQlCakh2jO5t1p/tracks?offset=${offset}&limit=50`, {
         // const result = await fetch(`https://api.spotify.com/v1/playlists/1MLxO6KxxeqOrEEXfXuGPh/tracks?offset=${offset}&limit=50`, {
+        const result = await fetch(`https://api.spotify.com/v1/me/tracks?offset=${offset}&limit=50`, {
           method: "GET", headers: { Authorization: `Bearer ${accessToken}` }
         });
         const json = await result.json();
         numResults = json.items.length;
         offset += 50;
         items = items.concat(json.items.map(item => item.track));
+      // } while (numResults === 50 && offset <= 500)
       } while (numResults === 50)
         setTracks(items);
     }
@@ -143,7 +145,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   params.append("client_id", clientId);
   params.append("response_type", "code");
   params.append("redirect_uri", "https://10.0.0.63:3000/callback");
-  params.append("scope", "user-read-private user-read-email");
+  params.append("scope", "user-read-private user-read-email user-library-read");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
 

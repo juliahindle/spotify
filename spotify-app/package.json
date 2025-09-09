@@ -16,6 +16,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build && cp CNAME build/CNAME",
+    "deploy": "gh-pages -b production -d build",
+    "lint": "eslint ./src/ && sass-lint -c .sasslintrc.json '**/*.scss' -v -q",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
