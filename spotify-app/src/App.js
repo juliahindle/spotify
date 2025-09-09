@@ -102,7 +102,7 @@ function App() {
   ///////// HTML //////////
   return (
     <>
-      <header><img src="logo.svg"/>FREE THE DATA</header>
+      <header><img src="logo.svg"/>FREE THE STATS</header>
       <main>
         <h2>Decade Stats</h2>
         <p>1940s: {tracks.filter(track => track.album.release_date.startsWith('194')).length}</p>
@@ -154,7 +154,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("response_type", "code");
-  params.append("redirect_uri", "https://freethedata.com");
+  params.append("redirect_uri", "https://freethestats.com");
   params.append("scope", "user-read-private user-read-email user-library-read");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
@@ -188,7 +188,7 @@ async function getAccessToken(clientId, code) {
   params.append("client_id", clientId);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
-  params.append("redirect_uri", "https://freethedata.com");
+  params.append("redirect_uri", "https://freethestats.com");
   params.append("code_verifier", verifier);
 
   const result = await fetch("https://accounts.spotify.com/api/token", {
