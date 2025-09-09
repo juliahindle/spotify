@@ -1,5 +1,6 @@
 import './App.css';
 import {useEffect, useState} from 'react';
+import './styles.scss';
 
 function App() {
 
@@ -99,43 +100,48 @@ function App() {
   }
 
   ///////// HTML //////////
-  return (<div style={{margin: "10px"}}>
-    <h2>Decade Stats</h2>
-    <p>1940s: {tracks.filter(track => track.album.release_date.startsWith('194')).length}</p>
-    <p>1950s: {tracks.filter(track => track.album.release_date.startsWith('195')).length}</p>
-    <p>1960s: {tracks.filter(track => track.album.release_date.startsWith('196')).length}</p>
-    <p>1970s: {tracks.filter(track => track.album.release_date.startsWith('197')).length}</p>
-    <p>1980s: {tracks.filter(track => track.album.release_date.startsWith('198')).length}</p>
-    <p>1990s: {tracks.filter(track => track.album.release_date.startsWith('199')).length}</p>
-    <p>2000s: {tracks.filter(track => track.album.release_date.startsWith('200')).length}</p>
-    <p>2010s: {tracks.filter(track => track.album.release_date.startsWith('201')).length}</p>
-    <p>2020s: {tracks.filter(track => track.album.release_date.startsWith('202')).length}</p>
-    
-    <h2>Genre Stats</h2>
-    {genresToCounts.map(genreToCount => <p>{genreToCount[0]}: {genreToCount[1]}</p>)}
+  return (
+    <>
+      <header><img src="logo.svg"/>FREE THE DATA</header>
+      <main>
+        <h2>Decade Stats</h2>
+        <p>1940s: {tracks.filter(track => track.album.release_date.startsWith('194')).length}</p>
+        <p>1950s: {tracks.filter(track => track.album.release_date.startsWith('195')).length}</p>
+        <p>1960s: {tracks.filter(track => track.album.release_date.startsWith('196')).length}</p>
+        <p>1970s: {tracks.filter(track => track.album.release_date.startsWith('197')).length}</p>
+        <p>1980s: {tracks.filter(track => track.album.release_date.startsWith('198')).length}</p>
+        <p>1990s: {tracks.filter(track => track.album.release_date.startsWith('199')).length}</p>
+        <p>2000s: {tracks.filter(track => track.album.release_date.startsWith('200')).length}</p>
+        <p>2010s: {tracks.filter(track => track.album.release_date.startsWith('201')).length}</p>
+        <p>2020s: {tracks.filter(track => track.album.release_date.startsWith('202')).length}</p>
+        
+        <h2>Genre Stats</h2>
+        {genresToCounts.map(genreToCount => <p>{genreToCount[0]}: {genreToCount[1]}</p>)}
 
-    <h2>Tracks</h2>
-    <table>
-      <tbody>
-        <tr>
-          <td>Album</td>
-          <td>Song</td>
-          <td>Artists</td>
-          <td>Genres</td>
-          <td onClick={onReleasedClick}>Released</td>
-        </tr>
-        {tracks && tracks.filter(track => track.name).map((track, i) => 
-          <tr key={i + JSON.stringify(track)}>
-            <td>{track.album.images.length > 0 && <img src={track.album.images[2].url}/>}</td>
-            <td>{track.name}</td>
-            <td>{track.artists.map((artist) => artist.name).join(", ")}</td>
-            <td>{trackToGenres && trackToGenres[track.id].join(", ")}</td>
-            <td>{track.album.release_date.substring(0, 4)}</td>
-          </tr>
-        )}
-        </tbody>
-    </table>
-</div>);
+        <h2>Tracks</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>Album</td>
+              <td>Song</td>
+              <td>Artists</td>
+              <td>Genres</td>
+              <td onClick={onReleasedClick}>Released</td>
+            </tr>
+            {tracks && tracks.filter(track => track.name).map((track, i) => 
+              <tr key={i + JSON.stringify(track)}>
+                <td>{track.album.images.length > 0 && <img src={track.album.images[2].url}/>}</td>
+                <td>{track.name}</td>
+                <td>{track.artists.map((artist) => artist.name).join(", ")}</td>
+                <td>{trackToGenres && trackToGenres[track.id].join(", ")}</td>
+                <td>{track.album.release_date.substring(0, 4)}</td>
+              </tr>
+            )}
+            </tbody>
+        </table>
+      </main>
+    </>
+  );
 }
 
 ///////////// HELPER FUNCTIONS ///////////////
@@ -148,7 +154,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("response_type", "code");
-  params.append("redirect_uri", "https://freethestats.com");
+  params.append("redirect_uri", "https://freethedata.com");
   params.append("scope", "user-read-private user-read-email user-library-read");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
@@ -182,7 +188,7 @@ async function getAccessToken(clientId, code) {
   params.append("client_id", clientId);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
-  params.append("redirect_uri", "https://freethestats.com");
+  params.append("redirect_uri", "https://freethedata.com");
   params.append("code_verifier", verifier);
 
   const result = await fetch("https://accounts.spotify.com/api/token", {
