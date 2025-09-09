@@ -6,7 +6,7 @@ function App() {
   const clientId = "621b007cf0b14214b779c6c6bee28393";
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
-  const [accessToken, setAccessToken] = useState(null);
+  const [accessToken, setAccessToken] = useState(params.get("token"));
   const [tracks, setTracks] = useState([]);
   const [artistIds, setArtistIds] = useState([]);
   const [trackToGenres, setTrackToGenres] = useState(null);
@@ -15,11 +15,15 @@ function App() {
   ///////// GET TOKEN //////////
   useEffect(() => {
     async function startup() {
-      if (!code) {
-        redirectToAuthCodeFlow(clientId);
-      } else {
-        alert(code);
-        setAccessToken(await getAccessToken(clientId, code));
+      if (!accessToken) {
+        if (!code) redirectToAuthCodeFlow(clientId);
+        else {
+          const token = await getAccessToken(clientId, code);
+          setAccessToken(token);
+          params.delete("code");
+          params.append("token", token);
+          window.location.search = params;
+        }
       }
     }
     startup();
